@@ -125,7 +125,7 @@ First define the input variable for the graph generator (this is the file genera
 selected_file <- Vespa_velutina_FL
 
 #Run the graph generator function
-List <- Generate_map_and_histogram(Vespa_velutina_FL, selected_region)
+List <- Generate_map_and_histogram(selected_file, selected_region)
 ```
 <br>
 <br>
