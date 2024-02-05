@@ -23,7 +23,7 @@ return(Data_select)
 }
 
 
-Generate_map_and_histogram <- function(file, region)
+Generate_graphs <- function(file, region)
 {
   Map1 <- 
     ggplot(region) + 
@@ -46,15 +46,15 @@ Generate_map_and_histogram <- function(file, region)
           legend.text = element_text(size = 8)) + 
     scale_color_continuous(breaks = seq(start_year, end_year, by = 1))
   
-  Histogram <- 
+  Barplot <- 
     ggplot(file, aes(as.factor(year))) + 
-    geom_histogram(stat = "count", fill = "darkorange2", color = "black") + 
+    geom_bar(fill = "darkorange2", color = "black") + 
     theme_bw() +
     labs(title = file$species, y = "Number of GBIF occurrences", x = "") +
     theme(plot.title = element_text(hjust = 0, size = 10), 
           axis.text = element_text(size = 8))
   
-  List_of_graphs <- list(Map1, Map2, Histogram)
+  List_of_graphs <- list(Map1, Map2, Barplot)
   
   return(List_of_graphs)
 }
