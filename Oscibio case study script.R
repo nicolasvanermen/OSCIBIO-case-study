@@ -52,10 +52,10 @@ sum(coord$X < East + 0.1 &
 selected_file <- Vespa_velutina_FL
 
 #Run the graph generator function
-List <- Generate_map_and_histogram(selected_file, selected_region)
+List <- Generate_graphs(selected_file, selected_region)
 Map_Vespa_velutina_FL <- List[[1]]
 Map_Vespa_velutina_FL
 Map_Vespa_velutina_FL_col_per_yr <- List[[2]]
 Map_Vespa_velutina_FL_col_per_yr
-Hist_Vespa_velutina_FL <- List[[3]]
-Hist_Vespa_velutina_FL
+Plot_Vespa_velutina_FL <- List[[3]]
+Plot_Vespa_velutina_FL
