@@ -358,10 +358,11 @@ display: none;
 
 <div id="aim" class="section level2">
 <h2>Aim</h2>
-<p>This script allows one to download regional GBIF occurrences of a
-predefined species within Belgium. The results will be presented through
-a map of occurrences and a bar chart of the number of observations per
-year. The script further allows the user to define the year range.</p>
+<p>This script and its associated functions allow one to download
+regional GBIF occurrences of a predefined species within Belgium. The
+results will be presented by means of two occurrence maps and a bar
+chart of the number of observations per year. The script further allows
+the user to define the year range.</p>
 <p>This markdown document illustrates how to use the script in order to
 retrieve occurrence data of the invasive Asian hornet <em>Vespa
 velutina</em> in the Flanders region.</p>
@@ -370,8 +371,8 @@ velutina</em> in the Flanders region.</p>
 <h2>Before you get started</h2>
 <p>Make sure to include your GBIF credentials in your R session:</p>
 <p>library(usethis)<br> usethis::edit_r_environ()</p>
-<p>Edit your .Renviron to look like this:<br>
-GBIF_USER=“nicolasvanermen”<br> GBIF_PWD=“************”<br> <a href="mailto:GBIF_EMAIL=%22nicolas.vanermen@inbo.be" class="email">GBIF_EMAIL=&quot;nicolas.vanermen@inbo.be</a>“<br></p>
+<p>Edit your .Renviron to look like this:<br> GBIF_USER=“username”<br>
+GBIF_PWD=“password”<br> <a href="mailto:GBIF_EMAIL=%22username@institute.be" class="email">GBIF_EMAIL=&quot;username@institute.be</a>” <br></p>
 <p>Also see: <a href="https://docs.ropensci.org/rgbif/articles/gbif_credentials.html" class="uri">https://docs.ropensci.org/rgbif/articles/gbif_credentials.html</a></p>
 <p>To retrieve a boundary map of Flanders one needs the data package
 “rnaturalearthhires”:<br> install.packages(“rnaturalearthhires”, repos =
@@ -381,13 +382,13 @@ GBIF_USER=“nicolasvanermen”<br> GBIF_PWD=“************”<br> <a href="mai
 <h2>Execute the functions</h2>
 <div id="download-function" class="section level3">
 <h3>Download function</h3>
-<p>First we source two functions. The first intends to download the
-data, the other will generate the graphs. To execute the download
-function the user needs to define the species, the region and the period
-of interest.</p>
-<pre class="r"><code>source(&quot;./Oscibio case study functions.R&quot;)
-
-#Define the input variables for download function
+<p>First we source two functions. The first serves to download the
+targeted data, the other will generate the graphs. To execute the
+download function the user needs to define the species, the region and
+the period of interest.</p>
+<pre class="r"><code>source(&quot;./Oscibio case study functions.R&quot;)</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>#Define the input variables for download function
 species_name &lt;- &quot;Vespa velutina&quot;
 selected_species &lt;- name_backbone(str_replace(species_name, &quot; &quot;, &quot;_&quot;))$usageKey
 selected_region &lt;- ne_states(country = &quot;Belgium&quot;, geounit = &quot;Flemish Region&quot;, returnclass = &quot;sf&quot;)
@@ -401,19 +402,12 @@ Vespa_velutina_FL &lt;- Download_GBIF_occurrences(selected_species, selected_reg
 <pre><code>## status: succeeded</code></pre>
 <pre><code>## download is done, status: succeeded</code></pre>
 <pre><code>## Download file size: 0.68 MB</code></pre>
-<pre><code>## On disk at G:\Mijn Drive\INBO\OSCIBIO case study\0000906-240202131308920.zip</code></pre>
+<pre><code>## On disk at G:\Mijn Drive\INBO\OSCIBIO case study\0004199-240202131308920.zip</code></pre>
 </div>
 <div id="tests-of-the-download-function" class="section level3">
 <h3>Tests of the download function</h3>
 <p>To verify the functionality of the download function we perform three
 simple tests that should all generate a TRUE value.</p>
-<!-- #### Test the data graphically: -->
-<!-- ```{r, include=FALSE} -->
-<!-- Flanders <- ne_states(country = "Belgium", geounit = "Flemish Region", returnclass = "sf") -->
-<!-- ``` -->
-<!-- ```{r, echo=FALSE} -->
-<!-- mapview(Vespa_velutina_FL, cex=0.3, col.regions = "black", layer.name='Vespa velutina (GBIF occurrences)') + mapview(Flanders, col.regions = "darkgreen", alpha.regions = 0.1) -->
-<!-- ``` -->
 <div id="check-whether-the-data-exclusively-hold-the-selected-species" class="section level4">
 <h4>Check whether the data exclusively hold the selected
 species:<br></h4>
@@ -434,11 +428,11 @@ East &lt;- 5.92000
 South &lt;- 50.67480
 West &lt;- 2.56035
 coord &lt;- as.data.frame(st_coordinates(Vespa_velutina_FL))
-#we allow a 0.1 degree relaxation on the geographical limits:
-test &lt;- sum(coord$X &lt; East+0.1 &amp;
-              coord$X &gt; West-0.1 &amp; 
-              coord$Y &gt; South-0.1 &amp; 
-              coord$Y &lt; North+0.1)</code></pre>
+#Note that we allow a 0.1 degree relaxation on the geographical limits:
+test &lt;- sum(coord$X &lt; East + 0.1 &amp;
+              coord$X &gt; West - 0.1 &amp; 
+              coord$Y &gt; South - 0.1 &amp; 
+              coord$Y &lt; North + 0.1)</code></pre>
 </div>
 <div id="check-whether-the-data-are-within-these-geographical-limits" class="section level4">
 <h4>Check whether the data are within these geographical
@@ -449,12 +443,12 @@ limits:<br></h4>
 </div>
 <div id="graph-function" class="section level3">
 <h3>Graph function</h3>
-<p>First define the input variable for the graph generator (this is the
-file generated by the download function) and then run the function:</p>
+<p>To execute this function the user needs to define the file generated
+by the download function and the region of interest.</p>
 <pre class="r"><code>selected_file &lt;- Vespa_velutina_FL
 
-#Run the graph generator function
-List &lt;- Generate_map_and_histogram(Vespa_velutina_FL, selected_region)</code></pre>
+#Run the graph function
+List &lt;- Generate_graphs(selected_file, selected_region)</code></pre>
 <p><br> <br></p>
 </div>
 </div>
